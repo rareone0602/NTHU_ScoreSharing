@@ -9,7 +9,7 @@ function draw_img(raw_data) {
   var ctx = document.getElementById('myChart').getContext("2d");
   var bg_color = ['rgba(54, 162, 235, 0.5)', 'rgba(54, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)'];
   var bd_color = ['rgba(54, 162, 235, 1.0)', 'rgba(54, 206, 86, 1.0)', 'rgba(255, 206, 86, 1.0)'];
-  var grade = [];
+  var grade = [], num_people = 0;
 
   for (i in raw_data[2]) {
     var data = raw_data[2][i];
@@ -21,7 +21,29 @@ function draw_img(raw_data) {
       data: data[1].slice(0, 11)
     };
     grade.push(new_grade);
+    num_people += raw_data[2][i][1][13];
   }
+
+  var defaultLegendClickHandler = Chart.defaults.global.legend.onClick;
+  var newLegendClickHandler = function (e, legendItem) {
+    var index = legendItem.datasetIndex;
+    var ci = this.chart;
+    var meta = ci.getDatasetMeta(index);
+
+    // See controller.isDatasetVisible comment
+    meta.hidden = meta.hidden === null? !ci.data.datasets[index].hidden : null;
+
+    var sum = 0;
+    for (i in raw_data[2]) {
+      // document.write(ci.getDatasetMeta(i).hidden);
+      if (ci.getDatasetMeta(i).hidden == null) {
+        sum += raw_data[2][i][1][13];
+      }
+    }
+    ci.options.scales.yAxes[0].ticks.suggestedMax = Math.max(10, sum);
+    // We hid a dataset ... rerender the chart
+    ci.update();
+  };
 
   var myChart = new Chart(ctx, {
     type: 'bar',
@@ -30,9 +52,12 @@ function draw_img(raw_data) {
       datasets: grade
     },
     options: {
+      legend: {
+        onClick: newLegendClickHandler
+      },
       title: {
         display: true,
-        text: raw_data[0] + '  ' + raw_data[1]
+        text: raw_data[0] + '  ' + raw_data[1],
       },
       scales: {
         xAxes: [{
@@ -43,7 +68,7 @@ function draw_img(raw_data) {
           ticks: {
             display: true,
             suggestedMin: 0,
-            suggestedMax: raw_data[2][0][1][13],
+            suggestedMax: num_people,
             callback: function (value) {
               return value + '人';
             }

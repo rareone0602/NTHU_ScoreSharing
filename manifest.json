@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "nthu_score_viewer",
-  "version": "1.0",
-  "description": "A community to share score distributions",
+  "name": "NTHU_ScoreSharing",
+  "version": "0.9",
+  "description": "A community sharing score distributions in NTHU",
   "content_scripts": [
     {
       "matches": ["*://www.ccxp.nthu.edu.tw/ccxp/*"],
