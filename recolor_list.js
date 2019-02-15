@@ -43,7 +43,11 @@ async function recolor_list() {
     let uri = `https://www.leporidae.ml/get_data?prog_name=${prog_names[i]}&prof_name=${prof_names[i]}&stu_id=${stu_id}`;
     fetch(encodeURI(uri)).then(r => r.text()).then(r => {
       if (r[0] == '[' && 2 < r.length) {
-        syll_nodes[i].childNodes[0].childNodes[1].style.backgroundColor = "green";
+        if (is_pre) {
+          syll_nodes[i].childNodes[0].style.backgroundColor = "green";
+        } else {
+          syll_nodes[i].childNodes[0].childNodes[1].style.backgroundColor = "green";
+        }
       }
     });
   }
