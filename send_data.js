@@ -26,8 +26,6 @@ function send_data() {
                     .then(r => {
                       let prof_name = r.match(/Instructor\s+[\S]+/)[0].match(/[^\s\(]+\(/)[0].slice(0, -1);
                       let prog_name = r.match(/Course Title\s+[\S]+/)[0].split(/\s/).slice(-1)[0];
-                      console.log(prof_name);
-                      console.log(prog_name);
                       let dist_url = `https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php?${token}&c_key=${prog_ids[i]}`;
                       fetch(dist_url)
                         .then(r => r.text())
@@ -35,7 +33,6 @@ function send_data() {
                           let nums = r.match(/td>&nbsp;<br|td>[0-9]+\.?[0-9]+%<br>[^0-9]+[0-9]+/g)
                             .map(t => t.match(/[0-9]+$/))
                             .map(n => n ? parseInt(n[0]) : 0);
-                          console.log(nums);
                           if (nums[12] == 0) { // All scores are sent
                             let obj = {
                               prog_id: prog_ids[i],
