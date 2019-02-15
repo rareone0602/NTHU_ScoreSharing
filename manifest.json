@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "nthu_score_viewer",
+  "version": "1.0",
+  "description": "A community to share score distributions",
+  "content_scripts": [
+    {
+      "matches": ["*://www.ccxp.nthu.edu.tw/ccxp/*"],
+      "js" : [
+        "send_data.js", "recolor_list.js", "draw_on_syllabus.js",
+        "draw_img.js", "driver.js", "third-party/Chart.min.js",
+        "third-party/moment.min.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}
