@@ -15,9 +15,8 @@ function send_data() {
         .then(g => g.text())
         .then(g => {
           if (g == "Unauthorized student ID") {
-            let perm = prompt("You are about to send score distributions to our server, are you sure?\nPlease type the two letters \"OK\" without additional characters to confirm:");
-            if (perm != "OK") {
-              alert(`We did not send your data because you entered "${perm}"`);
+            if (!window.confirm("您即將傳送您上過的課程的成績分布至雲端資料庫，您是否同意這個操作？")) {
+              alert("您取消了傳送成績分佈的操作，將無法閱覽雲端資料庫中的歷年成績分布表。");
               return;
             }
             let prog_ids = r.match(/form1.get_ckey.value="[^"]+/g).map(u => u.substr(22));
