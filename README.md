@@ -6,8 +6,6 @@ In return, every class that you have taken will have its score distribution subm
 
 Available at chrome store: https://chrome.google.com/webstore/detail/nthuscoresharing/fbbgchnopppgncdjbckkjehfchncghdf  
 
-Also available as firefox extension package as the file `nthu_scoresharing-0.903-an+fx.xpi`.  
-
 ## Remarks
 
 The backend does not receive any sensitive data of the users such as password and access token.  
