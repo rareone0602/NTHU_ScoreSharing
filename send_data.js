@@ -10,7 +10,7 @@ function send_data() {
     .then(r => r.arrayBuffer())
     .then(r => { let d = new TextDecoder("big5"); return d.decode(r); })
     .then(r => {
-      let stu_id = r.match(/\d{8,}/)[0];
+      let stu_id = r.match(/Student Number\D+\d+/)[0].match(/\d+$/)[0];
       let uri = `https://www.leporidae.ml/validate?stu_id=${stu_id}`;
       fetch(uri).then(g => g.text()).then(g => {
         if (g == "true") return; // validated

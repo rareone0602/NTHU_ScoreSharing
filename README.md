@@ -1,4 +1,4 @@
-# NTHU_ScoreSharing v0.904
+# NTHU_ScoreSharing v0.905
 
 A browser extension that shares score distributions.  
 You will be able to see score distributions of curriculums if anyone with this extension has it.  
@@ -6,7 +6,7 @@ In return, every class that you have taken will have its score distribution subm
 
 Available at chrome store: https://chrome.google.com/webstore/detail/nthuscoresharing/fbbgchnopppgncdjbckkjehfchncghdf  
 
-Available as firefox extension: `nthu_scoresharing-0.904-an+fx.xpi`  
+Available as firefox extension: `nthu_scoresharing-0.905-an+fx.xpi`  
 Download the file and open it with firefox desktop browser.  
 Note that you will have to **manually** update if you are to use firefox.
 
