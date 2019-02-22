@@ -4,44 +4,54 @@ function draw_img(raw_data) {
   c.id = "myChart";
   c.width = "400";
   c.height = "400";
-  document.getElementsByTagName("div")[0].prepend(c);//innerHTML += '<canvas id="myChart" width="300" height="300"></canvas>';
+  document.getElementsByTagName("div")[0].prepend(c);
 
   var ctx = document.getElementById('myChart').getContext("2d");
-  var bg_color = ['rgba(54, 162, 235, 0.5)', 'rgba(54, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)'];
-  var bd_color = ['rgba(54, 162, 235, 1.0)', 'rgba(54, 206, 86, 1.0)', 'rgba(255, 206, 86, 1.0)'];
-  var grade = [], num_people = 0;
+  var bg_color = ['rgba(54, 162, 255, 0.7)', 'rgba(54, 206, 86, 0.7)', 'rgba(255, 206, 86, 0.7)'];
+  var bd_color = ['rgba(54, 162, 255, 1.0)', 'rgba(54, 206, 86, 1.0)', 'rgba(255, 206, 86, 1.0)'];
 
+  // fucture data type
+  var courses = [];
   for (i in raw_data[2]) {
-    var data = raw_data[2][i];
-    var new_grade = {
-      label: data[0],
+    var course = {
+      course_name: raw_data[0],
+      course_teacher: raw_data[1], // TODO: more than one teacher
+      course_number: raw_data[2][i][0],
+      registered_numbers: raw_data[2][i][1][13],
+      grade_distribution: raw_data[2][i][1].slice(0, 11)
+    };
+    courses.push(course);
+  }
+  
+  var graph_data = [];
+  var num_people = 0;
+
+  for (i in courses) {
+    var data = {
+      label: courses[i].course_number,
       backgroundColor: bg_color[i],
       borderColor: bd_color[i],
       borderWidth: 1,
-      data: data[1].slice(0, 11)
+      data: courses[i].grade_distribution,
+      hidden: false
     };
-    grade.push(new_grade);
-    num_people += raw_data[2][i][1][13];
+    num_people += courses[i].registered_numbers;
+    graph_data.push(data);
   }
 
-  var defaultLegendClickHandler = Chart.defaults.global.legend.onClick;
   var newLegendClickHandler = function (e, legendItem) {
     var index = legendItem.datasetIndex;
     var ci = this.chart;
     var meta = ci.getDatasetMeta(index);
 
-    // See controller.isDatasetVisible comment
     meta.hidden = meta.hidden === null? !ci.data.datasets[index].hidden : null;
 
-    var sum = 0;
-    for (i in raw_data[2]) {
-      // document.write(ci.getDatasetMeta(i).hidden);
-      if (ci.getDatasetMeta(i).hidden == null) {
-        sum += raw_data[2][i][1][13];
-      }
+    if (meta.hidden) {
+      num_people -= courses[index].registered_numbers;
+    } else {
+      num_people += courses[index].registered_numbers;
     }
-    ci.options.scales.yAxes[0].ticks.suggestedMax = Math.max(10, sum);
-    // We hid a dataset ... rerender the chart
+    ci.options.scales.yAxes[0].ticks.suggestedMax = Math.max(10, num_people);
     ci.update();
   };
 
@@ -49,15 +59,27 @@ function draw_img(raw_data) {
     type: 'bar',
     data: {
       labels: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E'],
-      datasets: grade
+      datasets: graph_data
     },
     options: {
-      legend: {
-        onClick: newLegendClickHandler
-      },
+      responsive: false,
       title: {
         display: true,
-        text: raw_data[0] + '  ' + raw_data[1],
+        text: raw_data[0] + ' -- ' + raw_data[1]
+      },
+      tooltips: {
+        mode: 'index',
+        intersect: true,
+        callbacks: {
+          footer: function(tooltipItems, data) {
+            var sum = 0;
+            tooltipItems.forEach(function(tooltipItem) {
+              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            });
+            return '百分比: ' + (sum / num_people * 100).toFixed(1) + ' %';
+          },
+        },
+        footerFontStyle: 'normal'
       },
       scales: {
         xAxes: [{
@@ -75,7 +97,9 @@ function draw_img(raw_data) {
           }
         }]
       },
-      responsive: false
+      legend: {
+        onClick: newLegendClickHandler
+      },
     }
   });
 }
