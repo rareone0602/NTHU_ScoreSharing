@@ -15,7 +15,7 @@ async function recolor_list(recolor = true) {
     prof_names.push((prof_node.innerText.match(/\S+/) || [""])[0]);
     syll_nodes.push(syll_node);
   }
-  if (!recolor) return await prog_names[0]; // if !recolor then return hash of the content, (lazy)
+  if (!recolor) return prog_names[0]; // if !recolor then return hash of the content, (lazy)
   for (let i = 0; i < n; ++i) {
     if (prog_names[i].length == 0 || prof_names[i].length == 0) continue;
     let uri = "https://www.leporidae.ml/get_data";

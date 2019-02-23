@@ -22,7 +22,7 @@ function draw_img(raw_data) {
     };
     courses.push(course);
   }
-  
+
   var graph_data = [];
   var num_people = 0;
 
@@ -72,24 +72,24 @@ function draw_img(raw_data) {
         intersect: true,
         callbacks: {
           label: function(tooltipItem, data) {
-              var cour_num = data.datasets[tooltipItem.datasetIndex].label;
-              var label = cour_num.slice(0, 3);
-              if (cour_num[3] == '1') {
-                label += '上';
-              } else {
-                label += '下';
-              }
-              label += ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-              label += ' / ' + courses[tooltipItem.datasetIndex].registered_numbers + '人'
-              return label;
-            },
-						footer: function(tooltipItems, data) {
-							var sum = 0;
-							tooltipItems.forEach(function(tooltipItem) {
-								sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-							});
-							return '平均百分比: ' + (sum / num_people * 100).toFixed(1) + ' %';
-						}
+            var cour_num = data.datasets[tooltipItem.datasetIndex].label;
+            var label = cour_num.slice(0, 3);
+            if (cour_num[3] == '1') {
+              label += '上';
+            } else {
+              label += '下';
+            }
+            label += ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            label += ' / ' + courses[tooltipItem.datasetIndex].registered_numbers + '人'
+            return label;
+          },
+          footer: function(tooltipItems, data) {
+            var sum = 0;
+            tooltipItems.forEach(function(tooltipItem) {
+              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            });
+            return '平均百分比: ' + (sum / num_people * 100).toFixed(1) + ' %';
+          }
         },
         footerFontStyle: 'normal'
       },
