@@ -1,4 +1,4 @@
-async function recolor_list(recolor = true) {
+async function recolor_list(cache, recolor = true) {
   let token  = document.location.href.match(/ACIXSTORE=[^&]+/)[0];
   let nodes  = window.frames.topFrame.document.body.querySelectorAll('td.word, tr.word');
   let is_pre = window.frames.topFrame.document.body.querySelectorAll('td.word').length > 0;
@@ -22,10 +22,19 @@ async function recolor_list(recolor = true) {
     uri += `?prog_name=${prog_names[i]}`;
     uri += `&prof_name=${prof_names[i]}`;
     uri += `&stu_id=${stu_id}`;
-    fetch(encodeURI(uri)).then(r => r.text()).then(r => {
-      if (r[0] == '[' && 2 < r.length) { // non-empty array -> valid response
+    if (uri in cache) {
+      if (cache[uri]) {
         syll_nodes[i].style.backgroundColor = "green";
       }
-    });
+    } else {
+      fetch(encodeURI(uri)).then(r => r.text()).then(r => {
+        if (r[0] == '[' && 2 < r.length) { // non-empty array -> valid response
+          cache[uri] = true;
+          syll_nodes[i].style.backgroundColor = "green";
+        } else {
+          cache[uri] = false;
+        }
+      });
+    }
   }
 }

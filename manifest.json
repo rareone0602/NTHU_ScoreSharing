@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "NTHU_ScoreSharing",
-  "version": "0.906",
+  "version": "0.907",
   "description": "A community sharing score distributions in NTHU",
   "content_scripts": [
     {
@@ -13,6 +13,9 @@
       ],
       "run_at": "document_start"
     }
+  ],
+  "permissions" : [
+    "https://www.leporidae.ml/*"
   ],
   "icons": { "128": "icon128.png" }
 }
