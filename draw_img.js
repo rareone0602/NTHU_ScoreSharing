@@ -76,8 +76,10 @@ function draw_img(raw_data) {
             var label = cour_num.slice(0, 3);
             if (cour_num[3] == '1') {
               label += '上';
-            } else {
+            } else if (cour_num[3] == '2') {
               label += '下';
+            } else {
+              label += '暑';
             }
             label += ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
             label += ' / ' + courses[tooltipItem.datasetIndex].registered_numbers + '人'
