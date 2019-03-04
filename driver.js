@@ -3,17 +3,10 @@ window.onload = async function() {
   if (document.location.href.match(/select_entry.php\?ACIXSTORE/)) send_data();
   if (document.location.href.match(/Syllabus\/.*c_key=/)) draw_on_syllabus();
   if (window.frames.topFrame) { // course system
-    let last_t = null;
     let cache = {};
     while (true) {
-      try {
-        recolor_list(cache, false).then(t => {
-          if (last_t != t) { // detect change then recolor
-            recolor_list(cache);
-            last_t = t;
-          }
-        });
-      } catch(err) {}
+      try { recolor_list(cache); }
+      catch(err) {}
       await sleep(2000);
     }
   }
