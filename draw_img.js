@@ -65,7 +65,7 @@ function draw_img(raw_data) {
       responsive: false,
       title: {
         display: true,
-        text: raw_data[0] + ' -- ' + raw_data[1]
+        text: raw_data[0] + ' -- ' + raw_data[1].join(', ')
       },
       tooltips: {
         mode: 'index',

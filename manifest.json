@@ -15,7 +15,7 @@
     }
   ],
   "permissions" : [
-    "https://www.leporidae.ml/*"
+    "https://nthuscoresharing.herokuapp.com/"
   ],
   "icons": { "128": "icon128.png" }
 }
