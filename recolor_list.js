@@ -20,8 +20,7 @@ async function recolor_list(cache) {
       if (cache[param]) syll_nodes[i].style.backgroundColor = "green";
     } else {
       fetch(uri).then(r => r.text()).then(r => {
-        j = JSON.parse(r);
-        if (j) {
+        if (JSON.parse(r)) {
           cache[param] = true;
           syll_nodes[i].style.backgroundColor = "green";
         } else {

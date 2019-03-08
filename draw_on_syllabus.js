@@ -11,7 +11,7 @@ async function draw_on_syllabus() {
     document.body.querySelectorAll('.class3')[5].childNodes
   ).filter((a, i) => ~i&1).map(t => t.data.match(/[^\s(]+/)[0]).sort();
   if (course_name.length == 0 || prof_names.length == 0) return;
-  let query_key = `${course_name}:${prof_names.join(';')}`;
+  let query_key = `${course_name}:${prof_names.join('%3B')}`;
 
   let data = await (async() => {
     const uri = `https://nthuscoresharing.herokuapp.com/query?user_id=${user_id}&query_key=${query_key}`;
