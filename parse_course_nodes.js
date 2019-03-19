@@ -2,7 +2,7 @@ function parse_course_nodes(frame) {
   let prog_nodes = [], prof_nodes = [], syll_nodes = [];
 
   try {
-    if (frame == frames.topFrame) { // preselect and real select system
+    if (frame == frames.topFrame || frame == frames[0]) { // preselect and real select system
       let nodes = frame.document.body.querySelectorAll('td.word, tr.word');
       let is_pre = frame.document.body.querySelectorAll('td.word').length > 0;
       let n = is_pre ? nodes.length / 11 : nodes.length;
