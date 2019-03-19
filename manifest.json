@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "NTHU_ScoreSharing",
-  "version": "0.908",
+  "version": "0.909",
   "description": "A community sharing score distributions in NTHU",
   "content_scripts": [
     {
@@ -9,7 +9,7 @@
       "js" : [
         "send_data.js", "recolor_list.js", "draw_on_syllabus.js",
         "draw_img.js", "driver.js", "third-party/Chart.min.js",
-        "third-party/moment.min.js"
+        "parse_course_nodes.js", "third-party/moment.min.js"
       ],
       "run_at": "document_start"
     }
