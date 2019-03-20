@@ -15,7 +15,8 @@
     }
   ],
   "permissions" : [
-    "https://nthuscoresharing.herokuapp.com/",
+    "https://nthu-scoresharing.herokuapp.com/",
+    "https://nthu-scoresharing-reserved.herokuapp.com/",
     "https://nthuscoresharing.firebaseio.com/"
   ],
   "icons": { "128": "icon128.png" }

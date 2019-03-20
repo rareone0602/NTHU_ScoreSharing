@@ -7,11 +7,8 @@ async function recolor_list(prog_names, prof_namess, syll_nodes, cache) {
       if (cache[param]) syll_nodes[i].style.backgroundColor = "green";
     } else {
       fetch(uri).then(r => r.text()).then(r => {
-        if (JSON.parse(r)) {
-          cache[param] = true;
+        if (cache[param] = !!JSON.parse(r)) {
           syll_nodes[i].style.backgroundColor = "green";
-        } else {
-          cache[param] = false;
         }
       });
     }

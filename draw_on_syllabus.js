@@ -14,7 +14,7 @@ async function draw_on_syllabus() {
   let query_key = `${course_name}:${prof_names.join('%3B')}`;
 
   let data = await (async() => {
-    const uri = `https://nthuscoresharing.herokuapp.com/query?user_id=${user_id}&query_key=${query_key}`;
+    const uri = host() + `/query?user_id=${user_id}&query_key=${query_key}`;
     const response = await fetch(uri);
     const text = await response.text();
     try { return JSON.parse(text); }

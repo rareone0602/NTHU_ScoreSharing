@@ -17,7 +17,7 @@ async function send_data() {
   let user_id = score_body.match(/Student Number\D+\d+/)[0].match(/\d+$/)[0];
 
   let auth = await (async() => {
-    let uri = `https://nthuscoresharing.herokuapp.com/validate?user_id=${user_id}`;
+    let uri = host() + `/validate?user_id=${user_id}`;
     let response = await fetch(uri);
     return response.json();
   })();
@@ -66,7 +66,7 @@ async function send_data() {
     )
   )()).filter(n => n);
 
-  fetch('https://nthuscoresharing.herokuapp.com/post_data', {
+  fetch(host() + '/post_data', {
     method: 'POST',
     body: JSON.stringify({ user_id: user_id, courses: data })
   });
