@@ -1,20 +1,16 @@
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+function host() { return "https://www.leporidae.ml"; }
 window.onload = async function() {
   if (document.location.href.match(/select_entry.php\?ACIXSTORE/)) send_data();
   if (document.location.href.match(/Syllabus\/.*c_key=/)) draw_on_syllabus();
-  if (window.frames.topFrame) { // course system
-    let last_t = null;
-    let cache = {};
-    while (true) {
-      try {
-        recolor_list(cache, false).then(t => {
-          if (last_t != t) { // detect change then recolor
-            recolor_list(cache);
-            last_t = t;
-          }
-        });
-      } catch(err) {}
-      await sleep(2000);
+  let cache = {};
+  while (true) {
+    if (frames.topFrame || frames.main || frames[2]) {
+      let [prog_names, prof_namess, syll_nodes] =
+        parse_course_nodes(frames.topFrame || frames.main || frames[2]);
+      try { recolor_list(prog_names, prof_namess, syll_nodes, cache); }
+      catch(err) {}
     }
+    await sleep(1000);
   }
 };
