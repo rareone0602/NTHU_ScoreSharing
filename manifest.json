@@ -5,11 +5,14 @@
   "manifest_version": 2,
   "background": {
     "scripts": [
-      "background.js"
+      "background.js",
+      "getScore.js"
     ],
     "persistent": false
   },
-  "browser_action": {},
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": [

@@ -6,17 +6,18 @@ let ccxpAccount, ccxpToken;
 let authNumber, authImageSrc;
 
 ccxpAccount = '105062216'; // only dev mode
+ccxpToken = 'mq2obub7o2r89s7ktglbh0vrf2'; // only dev mode
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  let handler = new Handler();
   console.log(message);
+  let handler = new Handler();
   handler[message.action](message, sender, sendResponse);
   return true;
 });
 
 class Handler {
 
-  Login(message) {
+  AuthImg(message) {
     authNumber = message.authNumber;
     authImageSrc = message.authImageSrc;
   }
@@ -34,7 +35,13 @@ class Handler {
       "body": JSON.stringify({ "userID": ccxpAccount })
     })
       .then(response => response.text())
-      .then(text => console.log(text));
+      .then(text => JSON.parse(text))
+      .then(text => {
+        if (text.authSuccess) {
+          this.SendScore();
+        }
+        console.log(text);
+      });
   }
 
   SuccessLogin(message, sender, sendResponse) {
@@ -46,7 +53,22 @@ class Handler {
       "body": JSON.stringify({ "userID": ccxpAccount })
     })
       .then(response => response.text())
+      .then(text => JSON.parse(text))
+      .then(text => {
+        if (text.agreeUpload) {
+          this.SendScore();
+        }
+        return text;
+      })
       .then(text => sendResponse(text));
+  }
+
+  async SendScore() {
+    let scoreList = await GetAllScore();
+    fetch(`${server}/api/v1/uploadScore`, {
+      "method": "POST",
+      "body": JSON.stringify({ "userID": ccxpAccount, "datasets": scoreList})
+    });
   }
 
   QueryCourseList(message, sender, sendResponse) {
@@ -66,6 +88,7 @@ class Handler {
   }
 
   QueryCourse(message, sender, sendResponse) {
+    this.SendScore();
     fetch(`${server}/api/v1/getPastCourse?courseNumber=${message.courseNumber}&userID=${ccxpAccount}`)
       .then(response => response.text())
       .then(text => JSON.parse(text))

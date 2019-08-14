@@ -11,6 +11,7 @@ chrome.runtime.sendMessage({
   // callback
   console.log(data);
   for (let course of data.datasets) {
+    if (course.absoluteGrade == null) continue;
     let pageDiv = document.querySelectorAll('div')[1];
     let chart = document.createElement('canvas');
     chart.width = "480";
@@ -31,7 +32,7 @@ function drawChart(course) {
       datasets: [{
         label: '# of People',
         data: Grade.map(item => course.absoluteGrade[item]),
-        enrollmentNumber: course.enrollmentNumber,
+        enrollmentNumber: course.absoluteGrade['N'],
         backgroundColor: Array(Grade.length).fill('rgba(54, 162, 235, 0.4)'),
         borderColor: Array(Grade.length).fill('rgba(54, 162, 235, 1)'),
         borderWidth: 1
@@ -41,7 +42,7 @@ function drawChart(course) {
       responsive: false,
       title: {
         display: true,
-        text: `${course.courseNumber.replace(/\s/g, '')}  ${course.courseTitle[0]} (${course.teacher})`,
+        text: `${course.courseNumber.replace(/\s/g, '')}  ${course.courseTitle[0]} (${course.teacher.filter(text => text != '')})`,
         fontFamily: 'Microsoft JhengHei',
         fontSize: 13
       },
@@ -49,7 +50,7 @@ function drawChart(course) {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            suggestedMax: course.enrollmentNumber,
+            suggestedMax: course.absoluteGrade['N'],
             stepSize: 1,
             maxTicksLimit: 10
           }

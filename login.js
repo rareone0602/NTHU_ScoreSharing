@@ -11,7 +11,7 @@ if (location.pathname == '/ccxp/INQUIRE/' || location.pathname == '/ccxp/INQUIRE
     let authNumber = document.querySelector('input[name="passwd2"]').value;
     let authImageSrc = document.querySelector('img[src^="auth_img"]').src;
     chrome.runtime.sendMessage({
-      action: "Login",
+      action: "AuthImg",
       authNumber,
       authImageSrc
     });
@@ -31,11 +31,12 @@ if (location.pathname == '/ccxp/INQUIRE/top.php') {
     ccxpAccount,
     ccxpToken
   }, function (data) {
-
-    let isAuth = JSON.parse(data).agreeUpload;
+    let isAuth = data.agreeUpload;
     if (isAuth == false && confirm(authMSG)) {
       console.log('new user');
       chrome.runtime.sendMessage({ action: "Auth" });
     }
   });
+
+  fetch('https://www.nthuscoresharing.ml/api/v1/hello');
 }
