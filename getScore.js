@@ -37,7 +37,7 @@ async function parseGradeAnnouncementPage(doc) {
 
 async function parseGradeDistributionPage(doc) {
   const Label = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E', 'X', 'U', 'N'];
-  if (doc.querySelectorAll('p')[1].innerText == '本科單科成績不公開') return null;
+  if (doc.querySelectorAll('p')[1].innerText.search('本科單科成績不公開') != -1) return null;
   let textList = doc.querySelectorAll('table')[1].rows[1].cells;
   let scoreDist = {};
   for (let i = 1; i < textList.length; i++) {

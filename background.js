@@ -29,6 +29,15 @@ class Handler {
     });
   }
 
+  Decaptcha(message, sender, sendResponse) {
+    fetch(`${server}/api/v1/decaptcha?pwdstr=${message.authImageSrc}`, {
+      "method": "GET"
+    })
+      .then(response => response.text())
+      .then(text => JSON.parse(text))
+      .then(text => sendResponse(text));
+  }
+
   Auth() {
     fetch(`${server}/api/v1/auth`, {
       "method": "POST",
@@ -67,21 +76,21 @@ class Handler {
     let scoreList = await GetAllScore();
     fetch(`${server}/api/v1/uploadScore`, {
       "method": "POST",
-      "body": JSON.stringify({ "userID": ccxpAccount, "datasets": scoreList})
+      "body": JSON.stringify({ "userID": ccxpAccount, "datasets": scoreList })
     });
   }
 
   QueryCourseList(message, sender, sendResponse) {
     fetch(`${server}/api/v1/checkCourseExist`, {
       "method": "POST",
-      "body": JSON.stringify({ "userID": ccxpAccount, "courseList": message.courseList})
+      "body": JSON.stringify({ "userID": ccxpAccount, "courseList": message.courseList })
     })
       .then(response => response.text())
       .then(text => JSON.parse(text))
       .then(text => {
         let res = {};
-        res.datasets = text.datasets.map(function(item, index) {
-          return {courseNumber: message.courseList[index], exist: item};
+        res.datasets = text.datasets.map(function (item, index) {
+          return { courseNumber: message.courseList[index], exist: item };
         });
         sendResponse(res);
       });

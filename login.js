@@ -4,6 +4,9 @@
 
 // Get Auth Image
 if (location.pathname == '/ccxp/INQUIRE/' || location.pathname == '/ccxp/INQUIRE/index.php') {
+
+  Decaptcha();
+
   let loginButton = document.querySelector('.bottom_class');
   loginButton.addEventListener('click', handler);
 
@@ -39,4 +42,16 @@ if (location.pathname == '/ccxp/INQUIRE/top.php') {
   });
 
   fetch('https://www.nthuscoresharing.ml/api/v1/hello');
+}
+
+async function Decaptcha() {
+  chrome.runtime.sendMessage({
+    action: "Decaptcha",
+    authImageSrc: document.querySelector('img[src^="auth_img"]').src.match(/\d*-\d*/g).shift()
+  }, function (data) {
+    console.log(data);
+    if (data.decaptcha != 'EXPIRED') {
+      document.querySelector('input[name="passwd2"]').value = data.decaptcha;
+    }
+  });
 }
