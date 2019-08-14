@@ -5,8 +5,8 @@ let server = 'https://www.nthuscoresharing.ml:5000';
 let ccxpAccount, ccxpToken;
 let authNumber, authImageSrc;
 
-ccxpAccount = '105062216'; // only dev mode
-ccxpToken = 'mq2obub7o2r89s7ktglbh0vrf2'; // only dev mode
+ccxpAccount = ''; // only dev mode
+ccxpToken = ''; // only dev mode
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   console.log(message);

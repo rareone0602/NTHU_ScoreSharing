@@ -1,13 +1,15 @@
-'use struct'
+'use strict'
   
 async function GetAllScore() {
 
   let doc = await GetHTMLDoc(`https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
+  if (doc.body.innerText == 'session is interrupted! ') return [];
   let scoreList = await parseGradeAnnouncementPage(doc);
 
   for (let i = 0; i < scoreList.length; i++) {
     let c_key = scoreList[i].courseNumber;
     let doc = await GetHTMLDoc(`https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php?ACIXSTORE=${ccxpToken}&c_key=${c_key}`);
+    if (doc.body.innerText == 'session is interrupted! ') return [];
     let scoreDist = await parseGradeDistributionPage(doc);
     scoreList[i].absoluteGrade = scoreDist;
   }
