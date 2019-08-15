@@ -1,7 +1,7 @@
 {
   "name": "NTHU_ScoreSharing",
   "description": "A community sharing score distributions in NTHU",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 2,
   "background": {
     "scripts": [
@@ -25,7 +25,8 @@
     },
     {
       "matches": [
-        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/7/7.6/7.6.1/JH761004.php*"
+        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/7/7.6/7.6.1/JH761004.php*",
+        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/7/7.1/7.1.3/JH713004.php*"
       ],
       "js": [
         "recolorSyllabusButton.js"

@@ -3,7 +3,6 @@
 
 let server = 'https://www.nthuscoresharing.ml:5000';
 let ccxpAccount, ccxpToken;
-let authNumber, authImageSrc;
 
 ccxpAccount = ''; // only dev mode
 ccxpToken = ''; // only dev mode
@@ -17,15 +16,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 class Handler {
 
-  AuthImg(message) {
-    authNumber = message.authNumber;
-    authImageSrc = message.authImageSrc;
-  }
-
+  // useless now
   SendAuthImg() {
     fetch(`${server}/api/v1/captcha`, {
       "method": "POST",
-      "body": JSON.stringify({ authNumber, authImageSrc })
+      "body": JSON.stringify({ })
     });
   }
 
@@ -54,7 +49,6 @@ class Handler {
   }
 
   SuccessLogin(message, sender, sendResponse) {
-    this.SendAuthImg();
     ccxpAccount = message.ccxpAccount;
     ccxpToken = message.ccxpToken;
     fetch(`${server}/api/v1/login`, {
@@ -97,7 +91,6 @@ class Handler {
   }
 
   QueryCourse(message, sender, sendResponse) {
-    this.SendScore();
     fetch(`${server}/api/v1/getPastCourse?courseNumber=${message.courseNumber}&userID=${ccxpAccount}`)
       .then(response => response.text())
       .then(text => JSON.parse(text))
