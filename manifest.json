@@ -39,9 +39,13 @@
         "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/common/Syllabus/*"
       ],
       "js": [
-        "insertChart.js",
         "lib/Chart.bundle.min.js",
-        "lib/chartjs-plugin-datalabels.js"
+        "lib/chartjs-plugin-datalabels.js",
+        "lib/swiper.min.js",
+        "insertChart.js"
+      ],
+      "css": [
+        "lib/swiper.min.css"
       ],
       "all_frames": true
     }

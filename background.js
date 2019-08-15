@@ -1,11 +1,8 @@
 // background script
 'use strict';
 
-let server = 'https://www.nthuscoresharing.ml:5000';
+const server = 'https://www.nthuscoresharing.ml:5000';
 let ccxpAccount, ccxpToken;
-
-ccxpAccount = ''; // only dev mode
-ccxpToken = ''; // only dev mode
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   console.log(message);

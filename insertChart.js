@@ -10,16 +10,39 @@ chrome.runtime.sendMessage({
 }, function (data) {
   // callback
   console.log(data);
+
   for (let course of data.datasets) {
     if (course.absoluteGrade == null) continue;
-    let pageDiv = document.querySelectorAll('div')[1];
+    course.teacherChineseName = [];
+    for (let i = 0; i < course.teacher.length; i += 2) {
+      course.teacherChineseName.push(course.teacher[i]);
+    }
     let chart = document.createElement('canvas');
+    chart.classList.add('swiper-slide');
     chart.width = "480";
     chart.height = "300";
-    chart.style = "border: 3px solid rgba(54,162,235,0.4); margin: 0 0 15px; padding: 15px 21px; border-radius: 6px;"
-    pageDiv.prepend(chart);
+    if (document.querySelector('.swiper-wrapper') == null) {
+      AddSwiper();
+    }
+    document.querySelector('.swiper-wrapper').prepend(chart);
     drawChart(course);
   }
+
+  let swiper = new Swiper('.swiper-container', {
+    slidesPerView: 1,
+    spaceBetween: 60,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    keyboard: {
+      enabled: true,
+    }
+  });
 });
 
 function drawChart(course) {
@@ -42,7 +65,7 @@ function drawChart(course) {
       responsive: false,
       title: {
         display: true,
-        text: `${course.courseNumber.replace(/\s/g, '')}  ${course.courseTitle[0]} (${course.teacher.filter(text => text != '')})`,
+        text: `${course.courseNumber.replace(/\s/g, '')}  ${course.courseTitle[0]} (${course.teacherChineseName})`,
         fontFamily: 'Microsoft JhengHei',
         fontSize: 13
       },
@@ -79,4 +102,29 @@ function drawChart(course) {
       }
     }
   });
+}
+
+function AddSwiper() {
+  let pageDiv = document.querySelectorAll('div')[1];
+  let swiperContainer = document.createElement('div');
+  let swiperWrapper = document.createElement('div');
+  let swiperPagination = document.createElement('div');
+  let swiperButtonNext = document.createElement('div');
+  let swiperButtonPrev = document.createElement('div');
+
+  swiperContainer.classList.add('swiper-container');
+  swiperWrapper.classList.add('swiper-wrapper');
+  swiperPagination.classList.add('swiper-pagination');
+  swiperButtonNext.classList.add('swiper-button-next');
+  swiperButtonPrev.classList.add('swiper-button-prev');
+  // swiperPagination.classList.add('swiper-pagination-white');
+  // swiperButtonPrev.classList.add('swiper-button-white');
+  // swiperButtonNext.classList.add('swiper-button-white');
+
+  pageDiv.prepend(swiperContainer);
+  swiperContainer.append(swiperWrapper);
+  swiperContainer.append(swiperPagination);
+  swiperContainer.append(swiperButtonNext);
+  swiperContainer.append(swiperButtonPrev);
+  swiperContainer.style = "width: 500; height: 320; border: 3px solid rgba(54,162,235,0.4); margin: 0 0 15px; padding: 15px 60px; border-radius: 6px;";
 }
