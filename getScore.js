@@ -1,6 +1,6 @@
 'use strict'
   
-async function GetAllScore() {
+async function GetAllScore(ccxpToken) {
 
   let doc = await GetHTMLDoc(`https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
   if (doc.body.innerText == 'session is interrupted! ') return [];

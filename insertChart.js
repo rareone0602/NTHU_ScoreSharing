@@ -84,7 +84,7 @@ function drawChart(course) {
       },
       tooltips: {
         callbacks: {
-          footer: function(tooltipItems, data) {
+          footer: function (tooltipItems, data) {
             let a = tooltipItems[0].yLabel;
             let b = data.datasets[0].enrollmentNumber;
             let pc = (100 * a / b).toFixed(1);
@@ -105,7 +105,8 @@ function drawChart(course) {
 }
 
 function AddSwiper() {
-  let pageDiv = document.querySelectorAll('div')[1];
+  let backPlane = (document.body.innerText.search('session is interrupted!') == -1) ?
+    document.querySelectorAll('div')[1] : document.body;
   let swiperContainer = document.createElement('div');
   let swiperWrapper = document.createElement('div');
   let swiperPagination = document.createElement('div');
@@ -121,7 +122,7 @@ function AddSwiper() {
   // swiperButtonPrev.classList.add('swiper-button-white');
   // swiperButtonNext.classList.add('swiper-button-white');
 
-  pageDiv.prepend(swiperContainer);
+  backPlane.prepend(swiperContainer);
   swiperContainer.append(swiperWrapper);
   swiperContainer.append(swiperPagination);
   swiperContainer.append(swiperButtonNext);

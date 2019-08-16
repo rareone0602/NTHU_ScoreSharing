@@ -1,8 +1,11 @@
 {
   "name": "NTHU_ScoreSharing",
   "description": "A community sharing score distributions in NTHU",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "manifest_version": 2,
+  "permissions": [
+    "storage"
+  ],
   "background": {
     "scripts": [
       "background.js",

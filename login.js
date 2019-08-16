@@ -24,13 +24,15 @@ if (location.pathname == '/ccxp/INQUIRE/top.php') {
 
   chrome.runtime.sendMessage({
     action: "SuccessLogin",
-    ccxpAccount,
-    ccxpToken
+    ccxpAccount
   }, function (data) {
+    console.log(data);
     let isAuth = data.agreeUpload;
-    if (isAuth == false && confirm(authMSG)) {
-      console.log('new user');
-      chrome.runtime.sendMessage({ action: "Auth" });
+    if (isAuth || confirm(authMSG)) {
+      if (isAuth == false) {
+        chrome.runtime.sendMessage({ action: "Auth", ccxpAccount });
+      }
+      chrome.runtime.sendMessage({ action: "SendScore", ccxpAccount, ccxpToken });
     }
   });
 
