@@ -60,6 +60,18 @@ class Handler {
     });
   }
 
+  async SendSelectList(message, sender, sendResponse) {
+    setTimeout(async function () {
+      let datasets = await GetOrder(message.ccxpToken);
+      chrome.storage.local.get(['ccxpAccount'], function (result) {
+        fetch(`${server}/api/v1/uploadOrder`, {
+          "method": "POST",
+          "body": JSON.stringify({ "userID": result.ccxpAccount, "datasets": datasets })
+        })
+      });
+    }, 1500);
+  }
+
   QueryCourseList(message, sender, sendResponse) {
     chrome.storage.local.get(['ccxpAccount'], function (result) {
       fetch(`${server}/api/v1/checkCourseExist`, {
@@ -84,6 +96,25 @@ class Handler {
         .then(response => response.text())
         .then(text => JSON.parse(text))
         .then(text => sendResponse(text));
+    });
+  }
+
+  QueryOrderList(message, sender, sendResponse) {
+    chrome.storage.local.get(['ccxpAccount'], function (result) {
+      fetch(`${server}/api/v1/getOrder`, {
+        "method": "POST",
+        "body": JSON.stringify({ "userID": result.ccxpAccount, "datasets": message.datasets })
+      })
+        .then(response => response.text())
+        .then(text => JSON.parse(text))
+        .then(text => {
+          console.log(text);
+          let res = {};
+          res.datasets = text.results.map(function (item, index) {
+            return { ...message.datasets[index], ...item };
+          });
+          sendResponse(res);
+        });
     });
   }
 }

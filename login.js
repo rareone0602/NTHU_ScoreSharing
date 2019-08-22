@@ -33,6 +33,7 @@ if (location.pathname == '/ccxp/INQUIRE/top.php') {
         chrome.runtime.sendMessage({ action: "Auth", ccxpAccount });
       }
       chrome.runtime.sendMessage({ action: "SendScore", ccxpAccount, ccxpToken });
+      chrome.runtime.sendMessage({ action: "SendSelectList", ccxpAccount, ccxpToken });
     }
   });
 
