@@ -1,24 +1,44 @@
 'use strict'
-  
-async function GetAllScore(ccxpToken) {
-  let doc = await GetHTMLDoc(`https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
-  if (doc.body.innerText == 'session is interrupted! ') return [];
-  let scoreList = await parseGradeAnnouncementPage(doc);
 
-  for (let i = 0; i < scoreList.length; i++) {
-    let c_key = scoreList[i].courseNumber;
-    let doc = await GetHTMLDoc(`https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php?ACIXSTORE=${ccxpToken}&c_key=${c_key}`);
-    if (doc.body.innerText == 'session is interrupted! ') return [];
-    let scoreDist = await parseGradeDistributionPage(doc);
-    scoreList[i].absoluteGrade = scoreDist;
-  }
-  console.log(scoreList);
-  return scoreList;
+const ccxpServer = 'https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE';
+
+async function getScore(ccxpToken) {
+  let ranking = await getRanking(ccxpToken);
+  let courseGrade = await getCourseGrade(ccxpToken);
+  let courseGradeDistribution = await getCourseGradeDistribution(ccxpToken, courseGrade);
+  console.log({ ranking, courseGrade, courseGradeDistribution });
+  return { ranking, courseGrade, courseGradeDistribution };
 }
 
-async function parseGradeAnnouncementPage(doc) {
-  let scoreList = Array();
+async function getRanking(ccxpToken) {
+  let doc = await getHTMLDoc(`${ccxpServer}/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
+  let rankingTable = doc.body.querySelectorAll('table')[4].rows;
+  let ranking = [];
+  for (let i = 2; i < rankingTable.length; i++) {
+    let Semester = rankingTable[i].cells[0].innerText + rankingTable[i].cells[1].innerText;
+    let GPA = rankingTable[i].cells[2].innerText;
+    let ClassRanking = rankingTable[i].cells[9].innerText;
+    let DepartmentRanking = rankingTable[i].cells[10].innerText;
+    let Comments = rankingTable[i].cells[13].innerText;
+    ranking.push({ Semester, GPA, ClassRanking, DepartmentRanking, Comments });
+  }
+  let cumulativeRanking = doc.body.querySelector('div > div').innerText;
+  let Semester = cumulativeRanking.match(/\(.*\)/g).shift().slice(1, -1);
+  let paras = cumulativeRanking.match(/\d+\/\d+、.*、.*$/g).shift().split('、')
+  ranking.push({
+    Semester: Semester,
+    GPA: paras[2],
+    ClassRanking: paras[1],
+    DepartmentRanking: paras[0],
+    Comments: ""
+  });
+  return ranking;
+}
+
+async function getCourseGrade(ccxpToken) {
+  let doc = await getHTMLDoc(`${ccxpServer}/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
   let scoreTable = doc.querySelectorAll('table')[1].rows;
+  let courseGrade = [];
   for (let i = 3; i < scoreTable.length - 1; i++) {
     let grade = scoreTable[i].cells[5].innerText.replace(/\s$/g, '');
     let courseNumber = String();
@@ -29,29 +49,42 @@ async function parseGradeAnnouncementPage(doc) {
     if (relativeGrade) {
       relativeGrade = relativeGrade.shift();
     }
-    scoreList.push( {courseNumber, grade, relativeGrade} );
+    courseGrade.push({ courseNumber, grade, relativeGrade });
   }
-  return scoreList;
+  return courseGrade;
+}
+
+async function getCourseGradeDistribution(ccxpToken, courseGrade) {
+  let courseGradeDistribution = [];
+  for (let course of courseGrade) {
+    let c_key = course.courseNumber;
+    let doc = await getHTMLDoc(`${ccxpServer}/JH/8/8.3/8.3.3/JH83302.php?ACIXSTORE=${ccxpToken}&c_key=${c_key}`);
+    let dist = await parseGradeDistributionPage(doc);
+    courseGradeDistribution.push({ courseNumber: c_key, dist });
+  }
+  return courseGradeDistribution;
 }
 
 async function parseGradeDistributionPage(doc) {
-  const Label = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E', 'X', 'U', 'N'];
-  if (doc.querySelectorAll('p')[1].innerText.search('本科單科成績不公開') != -1) return null;
-  let textList = doc.querySelectorAll('table')[1].rows[1].cells;
-  let scoreDist = {};
-  for (let i = 1; i < textList.length; i++) {
-    let count = textList[i].innerHTML.split('<br>')[1].match(/\d+/g);
-    if (count == null) {
-      count = 0;
-    } else {
-      count = Number(count[0]);
-    }
-    scoreDist[Label[i - 1]] = count;
+  if (doc.body.innerText.search('disclose') >= 0) {
+    return null;
+    // 不公開啦 QQ
   }
-  return scoreDist;
+  let numberTable = doc.body.querySelector('[border="1"]');
+  let dist = {};
+  for (let i = 1; i < numberTable.rows[0].cells.length; i++) {
+    let key = numberTable.rows[0].cells[i].innerHTML.split('<br>')[1].replace(/\s/g, ''), value;
+    try {
+      value = Number(numberTable.rows[1].cells[i].innerText.split('\n')[1].match(/\d+/g).shift());
+    } catch (err) {
+      value = 0;
+    }
+    dist[key] = value;
+  }
+  return dist;
 }
 
-async function GetHTMLDoc(uri) {
+async function getHTMLDoc(uri) {
   let response = await fetch(uri);
   let buffer = await response.arrayBuffer();
   let decoder = new TextDecoder("big5");

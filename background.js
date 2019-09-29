@@ -53,10 +53,10 @@ class Handler {
   }
 
   async SendScore(message, sender, sendResponse) {
-    let scoreList = await GetAllScore(message.ccxpToken);
+    let datasets = await getScore(message.ccxpToken);
     fetch(`${server}/api/v1/uploadScore`, {
       "method": "POST",
-      "body": JSON.stringify({ "userID": message.ccxpAccount, "datasets": scoreList })
+      "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
     });
   }
 
