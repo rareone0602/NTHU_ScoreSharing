@@ -1,14 +1,12 @@
-// insert chart on syllabus
 'use strict'
 
 let params = new URLSearchParams(decodeURI(location.search));
 let courseNumber = params.get('c_key'); // note that with space
 
 chrome.runtime.sendMessage({
-  action: "QueryCourse",
+  action: "QueryCourseScore",
   courseNumber
 }, function (data) {
-  // callback
   console.log(data);
 
   for (let course of data.datasets) {

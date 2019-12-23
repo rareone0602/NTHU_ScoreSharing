@@ -1,5 +1,3 @@
-// context script on Tentative Course Selection System and offical system(url??)
-// recolor syllabus button
 'use strict';
 
 // this page is Tentative Course Selection System
@@ -34,12 +32,11 @@ if (location.pathname == '/ccxp/COURSE/JH/7/7.1/7.1.3/JH713004.php') {
 
 async function ColorButton(courseList, buttonList) {
   chrome.runtime.sendMessage({
-    action: 'QueryCourseList',
+    action: 'QueryPastCourseExist',
     courseList
-  }, function (data) {
-    // callback
-    console.log(data);
-    for (let course of data.datasets) {
+  }, function (response) {
+    console.log(response);
+    for (let course of response.datasets) {
       if (course.exist) {
         buttonList[course.courseNumber].style.backgroundColor = 'green';
       }
