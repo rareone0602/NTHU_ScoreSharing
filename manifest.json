@@ -1,18 +1,65 @@
 {
-  "manifest_version": 2,
   "name": "NTHU_ScoreSharing",
-  "version": "0.909",
   "description": "A community sharing score distributions in NTHU",
+  "version": "1.3.0",
+  "manifest_version": 2,
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "scripts": [
+      "src/background.js",
+      "src/getScore.js"
+    ],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "src/popup.html"
+  },
   "content_scripts": [
     {
-      "matches": ["*://www.ccxp.nthu.edu.tw/ccxp/*"],
-      "js" : [
-        "send_data.js", "recolor_list.js", "draw_on_syllabus.js",
-        "draw_img.js", "driver.js", "third-party/Chart.min.js",
-        "parse_course_nodes.js", "third-party/moment.min.js"
+      "matches": [
+        "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/*"
       ],
-      "run_at": "document_start"
+      "js": [
+        "src/login.js",
+        "src/decaptcha.js"
+      ],
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/7/7.6/7.6.1/JH761004.php*",
+        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/7/7.1/7.1.3/JH713004.php*"
+      ],
+      "js": [
+        "src/recolor.js"
+      ],
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/common/Syllabus/*",
+        "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/common/Syllabus/*"
+      ],
+      "js": [
+        "lib/Chart.bundle.min.js",
+        "lib/chartjs-plugin-datalabels.js",
+        "lib/swiper.min.js",
+        "src/syllabus.js"
+      ],
+      "css": [
+        "lib/swiper.min.css"
+      ],
+      "all_frames": true
     }
   ],
-  "icons": { "128": "icon128.png" }
+  "icons": {
+    "16": "images/network16.png",
+    "24": "images/network24.png",
+    "32": "images/network32.png",
+    "64": "images/network64.png",
+    "128": "images/network128.png",
+    "512": "images/network512.png"
+  }
 }
