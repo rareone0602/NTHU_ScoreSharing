@@ -1,51 +1,53 @@
 'use strict'
 
-let params = new URLSearchParams(decodeURI(location.search));
-let courseNumber = params.get('c_key'); // note that with space
+function draw_DoughnutChart(canvas, dist) {
+  const bgColor = {
+    "A+": 'rgba(54, 162, 235, 0.6)',
+    "A" : 'rgba(54, 162, 235, 0.6)',
+    "A-": 'rgba(54, 162, 235, 0.6)',
+    "B+": 'rgba(75, 192, 192, 0.6)',
+    "B" : 'rgba(75, 192, 192, 0.6)',
+    "B-": 'rgba(75, 192, 192, 0.6)',
+    "C+": 'rgba(255, 206, 86, 0.6)',
+    "C" : 'rgba(255, 206, 86, 0.6)',
+    "C-": 'rgba(255, 206, 86, 0.6)',
+    "D" : 'rgba(255, 99, 132, 0.6)',
+    "E" : 'rgba(255, 99, 132, 0.6)',
+    "X" : 'rgba(255, 99, 132, 0.6)',
+    "unknown": 'rgba(0, 0, 0, 0.2)',
+  };
 
-chrome.runtime.sendMessage({
-  action: "QueryCourseScore",
-  courseNumber
-}, function (data) {
-  console.log(data);
-
-  for (let course of data.datasets) {
-    if (course.absoluteGrade == null) continue;
-    course.teacherChineseName = [];
-    for (let i = 0; i < course.teacher.length; i += 2) {
-      course.teacherChineseName.push(course.teacher[i]);
-    }
-    let chart = document.createElement('canvas');
-    chart.classList.add('swiper-slide');
-    chart.width = "480";
-    chart.height = "300";
-    if (document.querySelector('.swiper-wrapper') == null) {
-      AddSwiper();
-    }
-    document.querySelector('.swiper-wrapper').prepend(chart);
-    drawChart(course);
-  }
-
-  let swiper = new Swiper('.swiper-container', {
-    slidesPerView: 1,
-    spaceBetween: 60,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
+  let ctx = canvas.getContext("2d");
+  let myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: Object.values(dist),
+        backgroundColor: Object.values(bgColor),
+      }],
+      labels: Object.keys(bgColor)
     },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    keyboard: {
-      enabled: true,
+    options: {
+      responsive: false,
+      legend: {
+        display: false
+      },
+      plugins: {
+        labels: {
+          render: 'label',
+          position: 'outside',
+          fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          fontSize: 16,
+        },
+        datalabels: false,
+      }
     }
   });
-});
+}
 
-function drawChart(course) {
+function draw_BarChart(canvas, course) {
   const Grade = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E', 'X'];
-  let ctx = document.querySelector('canvas').getContext("2d");
+  let ctx = canvas.getContext("2d");
   let myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -96,13 +98,14 @@ function drawChart(course) {
           align: 'top',
           offset: -4,
           color: '#36A2EB'
-        }
+        },
+        labels: false
       }
     }
   });
 }
 
-function AddSwiper() {
+function createSwiper() {
   let backPlane = (document.body.innerText.search('session is interrupted!') == -1) ?
     document.querySelectorAll('div')[1] : document.body;
   let swiperContainer = document.createElement('div');
@@ -126,4 +129,5 @@ function AddSwiper() {
   swiperContainer.append(swiperButtonNext);
   swiperContainer.append(swiperButtonPrev);
   swiperContainer.style = "width: 500; height: 320; border: 3px solid rgba(54,162,235,0.4); margin: 0 0 15px; padding: 15px 60px; border-radius: 6px;";
+
 }

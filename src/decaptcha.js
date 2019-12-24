@@ -8,7 +8,7 @@ function autoFillCaptcha(response) {
   }
 }
 
-if (location.pathname == '/ccxp/INQUIRE/') {
+if (location.pathname == '/ccxp/INQUIRE/' || location.pathname == '/ccxp/INQUIRE/index.php') {
   chrome.runtime.sendMessage({
     action: "Decaptcha",
     authImageSrc: document.querySelector('img[src^="auth_img"]').src.match(/\d+-\d+/g)[0]

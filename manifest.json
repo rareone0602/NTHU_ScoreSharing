@@ -1,7 +1,7 @@
 {
   "name": "NTHU_ScoreSharing",
   "description": "A community sharing score distributions in NTHU",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "manifest_version": 2,
   "permissions": [
     "storage"
@@ -40,13 +40,16 @@
     {
       "matches": [
         "https://www.ccxp.nthu.edu.tw/ccxp/COURSE/JH/common/Syllabus/*",
-        "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/common/Syllabus/*"
+        "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/common/Syllabus/*",
+        "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php*"
       ],
       "js": [
         "lib/Chart.bundle.min.js",
+        "lib/chartjs-plugin-labels.min.js",
         "lib/chartjs-plugin-datalabels.js",
         "lib/swiper.min.js",
-        "src/syllabus.js"
+        "src/drawChart.js",
+        "src/insertChart.js"
       ],
       "css": [
         "lib/swiper.min.css"

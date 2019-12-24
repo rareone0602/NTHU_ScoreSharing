@@ -1,4 +1,4 @@
-# NTHU_ScoreSharing v1.3.0
+# NTHU_ScoreSharing v1.3.1
 
 A browser extension that shares score distributions.
 You will be able to see score distributions of curriculums if anyone with this extension has it.  

@@ -43,10 +43,13 @@ class Handler {
 
   async SendScore(message, sender, sendResponse) {
     let datasets = await getScore(message.ccxpToken);
+    console.log(datasets);
     fetch(`${server}/api/v1/uploadScore`, {
       "method": "POST",
       "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
-    });
+    })
+      .then(response => response.json())
+      .then(json => console.log(json));
   }
 
   QueryPastCourseExist(message, sender, sendResponse) {

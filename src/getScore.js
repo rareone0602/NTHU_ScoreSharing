@@ -6,7 +6,6 @@ async function getScore(ccxpToken) {
   let ranking = await getRanking(ccxpToken);
   let courseGrade = await getCourseGrade(ccxpToken);
   let courseGradeDistribution = await getCourseGradeDistribution(ccxpToken, courseGrade);
-  console.log({ ranking, courseGrade, courseGradeDistribution });
   return { ranking, courseGrade, courseGradeDistribution };
 }
 
@@ -73,9 +72,10 @@ async function parseGradeDistributionPage(doc) {
   let numberTable = doc.body.querySelector('[border="1"]');
   let dist = {};
   for (let i = 1; i < numberTable.rows[0].cells.length; i++) {
-    let key = numberTable.rows[0].cells[i].innerHTML.split('<br>')[1].replace(/\s/g, ''), value;
+    let key = numberTable.rows[0].cells[i].innerText.replace(/[\n\s+\d~]/g, '');
+    let value = 0;
     try {
-      value = Number(numberTable.rows[1].cells[i].innerText.split('\n')[1].match(/\d+/g).shift());
+      value = Number(numberTable.rows[1].cells[i].innerText.split('\n')[1].match(/\d+/g)[0]);
     } catch (err) {
       value = 0;
     }
