@@ -76,5 +76,27 @@ class Handler {
         .then(json => sendResponse(json));
     });
   }
+
+  SendRating(message, sender, sendResponse) {
+    chrome.storage.local.get(['ccxpAccount'], function (result) {
+      fetch(`${server}/api/v1/rate`, {
+        "method": "POST",
+        "body": JSON.stringify({ "userID": result.ccxpAccount, "courseNumber": message.courseNumber, "rate": message.rate })
+      })
+        .then(response => response.text())
+        .then(json => sendResponse(json));
+    });
+  }
+
+  QueryRatingHistory(message, sender, sendResponse) {
+    chrome.storage.local.get(['ccxpAccount'], function (result) {
+      fetch(`${server}/api/v1/checkRate`, {
+        "method": "POST",
+        "body": JSON.stringify({ "userID": result.ccxpAccount })
+      })
+        .then(response => response.json())
+        .then(json => sendResponse(json));
+    });
+  }
   
 }
