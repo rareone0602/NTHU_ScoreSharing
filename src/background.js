@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true;
 });
 
-const server = 'https://www.nthuscoresharing.ml';
+const server = 'https://140.114.71.70';
 
 class Handler {
 
