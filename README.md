@@ -1,4 +1,4 @@
-# NTHU_ScoreSharing v1.4.0
+# NTHU_ScoreSharing v1.4.1
 
 A browser extension that shares score distributions.
 You will be able to see score distributions of curriculums if anyone with this extension has it.  
@@ -6,4 +6,8 @@ In return, every class that you have taken will have its score distribution subm
 
 Available at chrome store: https://chrome.google.com/webstore/detail/nthuscoresharing/fbbgchnopppgncdjbckkjehfchncghdf
 
-## Other Notes
+## Donation
+
+If this project helped you save your time, you can give us a cup of coffee for our efforts :) 
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](paypal.me/b0w1d)
