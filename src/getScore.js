@@ -21,16 +21,6 @@ async function getRanking(ccxpToken) {
     let Comments = rankingTable[i].cells[13].innerText;
     ranking.push({ Semester, GPA, ClassRanking, DepartmentRanking, Comments });
   }
-  let cumulativeRanking = doc.body.querySelector('div > div').innerText;
-  let Semester = cumulativeRanking.match(/\(.*\)/g).shift().slice(1, -1);
-  let paras = cumulativeRanking.match(/\d+\/\d+、.*、.*$/g).shift().split('、')
-  ranking.push({
-    Semester: Semester,
-    GPA: paras[2],
-    ClassRanking: paras[1],
-    DepartmentRanking: paras[0],
-    Comments: ""
-  });
   return ranking;
 }
 

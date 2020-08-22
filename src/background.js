@@ -12,8 +12,9 @@ const server = 'https://140.114.71.70';
 class Handler {
 
   Decaptcha(message, sender, sendResponse) {
-    fetch(`${server}/api/v1/decaptcha?pwdstr=${message.authImageSrc}`, {
-      "method": "GET"
+    fetch(`${server}/api/v1/decaptcha`, {
+      "method": "POST",
+      "body": JSON.stringify({ "pwdstr": message.DataURL })
     })
       .then(response => response.json())
       .then(json => sendResponse(json));
