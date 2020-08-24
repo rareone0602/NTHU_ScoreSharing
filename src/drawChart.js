@@ -105,6 +105,66 @@ function draw_BarChart(canvas, course) {
   });
 }
 
+function draw_BarChart_Rela(canvas, course) {
+  const Grade = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E', 'X'];
+  let ctx = canvas.getContext("2d");
+  let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Grade,
+      datasets: [{
+        label: '# of People',
+        data: Grade.map(item => course.relativeGrade[item]),
+        enrollmentNumber: course.enrollmentNumber,
+        backgroundColor: Array(Grade.length).fill('rgba(255, 99, 132, 0.3)'),
+        borderColor: Array(Grade.length).fill('rgba(255, 99, 132, 1)'),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: false,
+      title: {
+        display: true,
+        text: `${course.courseNumber.replace(/\s/g, '')}  ${course.courseTitle[0]} (${course.teacherChineseName}) [相對成績]`,
+        fontFamily: 'Microsoft JhengHei',
+        fontSize: 13
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            suggestedMax: course.enrollmentNumber,
+            stepSize: 1,
+            maxTicksLimit: 10
+          }
+        }]
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        callbacks: {
+          footer: function (tooltipItems, data) {
+            let a = tooltipItems[0].yLabel;
+            let b = data.datasets[0].enrollmentNumber;
+            let pc = (100 * a / b).toFixed(1);
+            return `Percentage: ${pc}%`;
+          }
+        }
+      },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          offset: -4,
+          color: '#E74C3C'
+        },
+        labels: false
+      }
+    }
+  });
+}
+
 function createSwiper() {
   let backPlane = (document.body.innerText.search('session is interrupted!') == -1) ?
     document.querySelectorAll('div')[1] : document.body;

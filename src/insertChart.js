@@ -37,7 +37,9 @@ if (location.pathname == '/ccxp/COURSE/JH/common/Syllabus/1.php' || location.pat
     console.log(response);
   
     for (let course of response.datasets) {
-      if (course.absoluteGrade == null) continue;
+      if (course.enrollmentNumber == null) {
+        continue;
+      }
       if (!iscreateSwiper) {
         createSwiper();
         iscreateSwiper = true;
@@ -52,7 +54,11 @@ if (location.pathname == '/ccxp/COURSE/JH/common/Syllabus/1.php' || location.pat
       for (let i = 0; i < course.teacher.length; i += 2) {
         course.teacherChineseName.push(course.teacher[i]);
       }
-      draw_BarChart(chart, course);
+      if (course.absoluteGrade == null) {
+        draw_BarChart_Rela(chart, course)
+      } else {
+        draw_BarChart(chart, course);
+      }
     }
 
     let swiper = new Swiper('.swiper-container', {
