@@ -1,5 +1,14 @@
 'use strict';
 
+chrome.runtime.onInstalled.addListener(function(install) {
+    //code for installation
+    chrome.tabs.create({
+        "url": "https://sites.google.com/view/mins-policy/home"
+    }, function(tab) {
+      window.alert("當您使用我們的服務，即表示您同意本條款，因此請務必詳閱本條款內容。")
+    });
+});
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   console.log(message);
   let handler = new Handler();
@@ -7,7 +16,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true;
 });
 
-const server = 'https://140.114.71.70';
+const server = 'https://119.14.151.252:1124';
 
 class Handler {
 

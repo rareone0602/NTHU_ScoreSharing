@@ -4,7 +4,9 @@
   "version": "1.4.3",
   "manifest_version": 2,
   "permissions": [
-    "storage"
+    "storage",
+    "<all_urls>",
+      "https://119.14.151.252:1124/*"
   ],
   "background": {
     "scripts": [
@@ -14,7 +16,7 @@
     "persistent": false
   },
   "browser_action": {
-    "default_popup": "src/popup.html"
+    "default_popup": "src/popup/dist/index.html"
   },
   "content_scripts": [
     {
