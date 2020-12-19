@@ -7,7 +7,17 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true;
 });
 
-const server = 'https://140.114.71.70';
+chrome.runtime.onInstalled.addListener(function(install) {
+    //code for installation
+    chrome.tabs.create({
+        "url": "https://sites.google.com/view/mins-policy/home"
+    }, function(tab) {
+      window.alert("當您使用我們的服務，即表示您同意本條款，因此請務必詳閱本條款內容。")
+    });
+});
+
+//const server = 'https://140.114.71.70';
+const server = 'http://localhost:5000'
 
 class Handler {
 
@@ -99,5 +109,5 @@ class Handler {
         .then(json => sendResponse(json));
     });
   }
-  
+
 }

@@ -26,15 +26,15 @@ async function getRanking(ccxpToken) {
 
 async function getCourseGrade(ccxpToken) {
   let doc = await getHTMLDoc(`${ccxpServer}/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
-  let scoreTable = doc.querySelectorAll('table')[1].rows;
+  let scoreTable = doc.querySelector('table[border="1"][cellspacing="0"][cellpadding="0"][align="center"]').rows;
   let courseGrade = [];
   for (let i = 3; i < scoreTable.length - 1; i++) {
-    let grade = scoreTable[i].cells[5].innerText.replace(/\s$/g, '');
-    let courseNumber = String();
-    courseNumber += scoreTable[i].cells[0].innerText;
-    courseNumber += scoreTable[i].cells[1].innerText.replace(/\s/g, '');
-    courseNumber += scoreTable[i].cells[2].innerHTML.replace(/&nbsp;/g, '');
-    let relativeGrade = scoreTable[i].cells[7].innerHTML.match(/\d*\/\d*/g);
+    let columns = scoreTable[i].cells
+    let grade = columns[5].innerText.replace(/\s$/g, '');
+    let courseNumber = columns[0].innerText +
+                       columns[1].innerText.replace(/\s/g, '') +
+                       columns[2].innerHTML.replace(/&nbsp;/g, '');
+    let relativeGrade = columns[7].innerHTML.match(/\d*\/\d*/g);
     if (relativeGrade) {
       relativeGrade = relativeGrade.shift();
     }
@@ -59,10 +59,10 @@ async function parseGradeDistributionPage(doc) {
     return null;
     // 不公開啦 QQ
   }
-  let numberTable = doc.body.querySelector('[border="1"]');
+  let numberTable = doc.body.querySelector('table[style="font-size:10pt;  border-collapse:collapse;"]');
   let dist = {};
   for (let i = 1; i < numberTable.rows[0].cells.length; i++) {
-    let key = numberTable.rows[0].cells[i].innerText.replace(/[\n\s+\d~]/g, '');
+    let key = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "E", "X", "U", "N"][i - 1];
     let value = 0;
     try {
       value = Number(numberTable.rows[1].cells[i].innerText.split('\n')[1].match(/\d+/g)[0]);
