@@ -26,13 +26,13 @@ async function getRanking(ccxpToken) {
 
 async function getCourseGrade(ccxpToken) {
   let doc = await getHTMLDoc(`${ccxpServer}/JH/8/R/6.3/JH8R63002.php?ACIXSTORE=${ccxpToken}`);
-  let scoreTable = doc.querySelector('table[border="1"][cellspacing="0"][cellpadding="0"][align="center"]').rows;
+  let scoreTable = doc.querySelectorAll('table')[1].rows;
   let courseGrade = [];
   for (let i = 3; i < scoreTable.length - 1; i++) {
     let columns = scoreTable[i].cells
-    let grade = columns[5].innerText.replace(/\s$/g, '');
+    let grade = columns[5].innerText.replace(/^\s+|\s+$/g, '');
     let courseNumber = columns[0].innerText +
-                       columns[1].innerText.replace(/\s/g, '') +
+                       columns[1].innerText.replace(/^\s+|\s+$/g, '') +
                        columns[2].innerHTML.replace(/&nbsp;/g, '');
     let relativeGrade = columns[7].innerHTML.match(/\d*\/\d*/g);
     if (relativeGrade) {
@@ -59,7 +59,7 @@ async function parseGradeDistributionPage(doc) {
     return null;
     // 不公開啦 QQ
   }
-  let numberTable = doc.body.querySelector('table[style="font-size:10pt;  border-collapse:collapse;"]');
+  let numberTable = doc.body.querySelector('[border="1"]');
   let dist = {};
   for (let i = 1; i < numberTable.rows[0].cells.length; i++) {
     let key = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "E", "X", "U", "N"][i - 1];
