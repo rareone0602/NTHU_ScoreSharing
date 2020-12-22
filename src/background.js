@@ -1,12 +1,5 @@
 'use strict';
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  console.log(message);
-  let handler = new Handler();
-  handler[message.action](message, sender, sendResponse);
-  return true;
-});
-
 chrome.runtime.onInstalled.addListener(function(install) {
     //code for installation
     chrome.tabs.create({
@@ -16,8 +9,14 @@ chrome.runtime.onInstalled.addListener(function(install) {
     });
 });
 
-//const server = 'https://140.114.71.70';
-const server = 'http://localhost:5000'
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  console.log(message);
+  let handler = new Handler();
+  handler[message.action](message, sender, sendResponse);
+  return true;
+});
+
+const server = 'http://119.14.151.252:1124';
 
 class Handler {
 
@@ -31,7 +30,8 @@ class Handler {
   }
 
   SuccessLogin(message, sender, sendResponse) {
-    chrome.storage.local.clear(() => {
+    chrome.storage.local.remove("ccxpAccount",() => {
+      console.log("remove succuessful");
       chrome.storage.local.set({ ccxpAccount: message.ccxpAccount });
     });
 
@@ -52,15 +52,41 @@ class Handler {
       .then(json => console.log(json));
   }
 
+
   async SendScore(message, sender, sendResponse) {
+
+    let sha256 = async(str) => {
+      return await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(str)).then(buf => {
+        return Array.prototype.map.call(new Uint8Array(buf), x => (('00'+x.toString(16)).slice(-2))).join('');
+      });
+    }
+
+    let PostScoreAndStorage = (result) => {
+      result["logined_account"][message.ccxpAccount] = json_hash;
+      chrome.storage.local.set(result);
+      fetch(`${server}/api/v1/uploadScore`, {
+        "method": "POST",
+        "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
+      }).then(response => response.json()).then(json => console.log(json));
+    };
+
     let datasets = await getScore(message.ccxpToken);
-    console.log(datasets);
-    fetch(`${server}/api/v1/uploadScore`, {
-      "method": "POST",
-      "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
-    })
-      .then(response => response.json())
-      .then(json => console.log(json));
+    let json_hash = await sha256(JSON.stringify(datasets) );
+
+    //Data format ==> result = {"logined_account" :{"account": "hash","aaa": "1234"}};
+    chrome.storage.local.get(["logined_account"], function (result) {
+      if (JSON.stringify(result) == "{}" ) {
+        result["logined_account"] = {};
+        PostScoreAndStorage(result);
+        console.log("空",result);
+      }else if (result["logined_account"][message.ccxpAccount] == undefined) {
+        PostScoreAndStorage(result);
+        console.log("新增用戶",result);
+      }else if (result["logined_account"][message.ccxpAccount] != json_hash) {
+        PostScoreAndStorage(result);
+        console.log("有變",result);
+      }
+    });
   }
 
   QueryPastCourseExist(message, sender, sendResponse) {
