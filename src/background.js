@@ -16,25 +16,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true;
 });
 
-const server = 'https://119.14.151.252:1124';
+const server = 'http://119.14.151.252:1124';
 
 class Handler {
-
-  async sha256(str) {
-
- const msgUint8 = new TextEncoder().encode(str);
- const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
- /*
-  const hashBuffer  = await crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
-    return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-  });
-  */
-  const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
- const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
-  return hashHex;
-}
-
-
 
   Decaptcha(message, sender, sendResponse) {
     fetch(`${server}/api/v1/decaptcha`, {
@@ -70,44 +54,36 @@ class Handler {
 
 
   async SendScore(message, sender, sendResponse) {
+    let  sha256 = async(str) => {
+      return await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(str)).then(buf => {
+         return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+      });
+    }
+
+    let PostScoreAndStorage = (result) => {
+      chrome.storage.local.set(result);
+      fetch(`${server}/api/v1/uploadScore`, {
+        "method": "POST",
+        "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
+      }).then(response => response.json()).then(json => console.log(json));
+    };
+
     let datasets = await getScore(message.ccxpToken);
-    let json_hash =await  this.sha256(JSON.stringify(datasets) );
-    //let result = {"logined_account" :[{"account" : "bbb" ,"data_hash" : "qqq"},{"account" : "aaa" ,"data_hash" : "1234"}]};
+    let json_hash = await sha256(JSON.stringify(datasets) );
+    //Data format ==> result = {"logined_account" :{"account": "hash","aaa": "1234"}};
     chrome.storage.local.get(["logined_account"], function (result) {
-      if(JSON.stringify(result) == "{}"){
-           result={"logined_account" :[{"account" : message.ccxpAccount ,"data_hash" : json_hash}]}
-           chrome.storage.local.set(result );
-           fetch(`${server}/api/v1/uploadScore`, {
-             "method": "POST",
-             "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
-           }).then(response => response.json()).then(json => console.log(json));
-           console.log("空",result);
-      }else{
-        result=result["logined_account"];
-        let exist_account=0;
-        for (let k in result) {
-          if(result[k]["account"] == message.ccxpAccount){
-            if(result[k]["data_hash"] != json_hash){
-              result[k]["data_hash"]=json_hash;
-              chrome.storage.local.set({"logined_account" : result } );
-              fetch(`${server}/api/v1/uploadScore`, {
-                "method": "POST",
-                "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
-              }).then(response => response.json()).then(json => console.log(json));
-              console.log("有變",result);
-            }
-            exist_account=1;
-          }
-        }
-        if(exist_account==0) {
-          result.push({"account" : message.ccxpAccount ,"data_hash" : json_hash });
-          chrome.storage.local.set({"logined_account" : result } );
-          fetch(`${server}/api/v1/uploadScore`, {
-            "method": "POST",
-            "body": JSON.stringify({ "userID": message.ccxpAccount, datasets })
-          }).then(response => response.json()).then(json => console.log(json));
-          console.log("新增用戶",result);
-        }
+      if (JSON.stringify(result) == "{}" ) {
+        result = {"logined_account": { [message.ccxpAccount]: json_hash }}
+        PostScoreAndStorage(result);
+        console.log("空",result);
+      }else if (result["logined_account"][message.ccxpAccount] == undefined){
+        result["logined_account"][message.ccxpAccount] = json_hash;
+        PostScoreAndStorage(result);
+        console.log("新增用戶",result);
+      }else if (result["logined_account"][message.ccxpAccount] != json_hash) {
+        result["logined_account"][message.ccxpAccount] = json_hash;
+        PostScoreAndStorage(result);
+        console.log("有變",result);
       }
     });
   }
