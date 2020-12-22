@@ -6,7 +6,7 @@
   "permissions": [
     "storage",
     "<all_urls>",
-      "https://119.14.151.252:1124/*"
+      "http://119.14.151.252:1124/*"
   ],
   "background": {
     "scripts": [
