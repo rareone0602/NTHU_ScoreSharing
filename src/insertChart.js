@@ -26,11 +26,7 @@ if (location.pathname == '/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php') {
         chart.height = "480";
 
         // old api format
-        console.log("countGrade unknown: ",course.countGrade['unknown']);
         course.countGrade['unknown'] = course.enrollmentNumber - course.countGrade['N'];
-        console.log("countGrade unknown: ",course.countGrade['unknown']);
-        console.log("course.enrollmentNumber: ",course.enrollmentNumber);
-        console.log("course.countGrade['N']: ",course.countGrade['N']);
 
         delete course.countGrade['N'];
         delete course.countGrade['U'];
@@ -38,7 +34,7 @@ if (location.pathname == '/ccxp/INQUIRE/JH/8/8.3/8.3.3/JH83302.php') {
       //  document.querySelector('div').append(chart);
 
         let text = document.createElement('div');
-        let textNode = document.createTextNode("此圖根據使用者資料統計，非完全上課人數。(請多多推廣nthu_scoreSharing插件，以便完善資料庫)。");
+        let textNode = document.createTextNode("此圖根據使用者資料統計，非完全上課人數");
         text.style.cssText = "font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;color: #666;font-size: 16px; font-weight: bold;";
         text.appendChild(textNode);
         document.querySelector('div').append(chart);
