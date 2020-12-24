@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true;
 });
 
-const server = 'https://140.114.71.70';
+const server = 'https://mins.page';
 
 
 class Handler {
@@ -65,6 +65,7 @@ class Handler {
 
     let datasets = await getScore(message.ccxpToken);
     let json_hash = await sha256(JSON.stringify(datasets) );
+    console.log(datasets);
 
     //Data format ==> result = {"logined_account" :{"account": "hash","aaa": "1234"}};
     chrome.storage.local.get(["logined_account"], function (result) {
