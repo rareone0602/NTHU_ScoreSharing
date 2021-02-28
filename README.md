@@ -1,8 +1,9 @@
-# NTHU_ScoreSharing v1.5.1
+# NTHU_ScoreSharing v2.0.0
 
 ## Update
-1. Solve the formatting issue of url matching
-1. Friendly guide in popup.
+1. Use popper instead, for more convenient usage
+1. Useful hyperlink in popup
+1. Remove relative grading feature. The more comprehension presentation is under discussion.
 
 ## Description
 
@@ -12,9 +13,9 @@ In return, every class that you have taken will have its score distribution subm
 
 Available at [chrome store](https://chrome.google.com/webstore/detail/nthuscoresharing/fbbgchnopppgncdjbckkjehfchncghdf)
 
-## Giving feedback
-
-If you like this project, you could consider giving us some useful feedback!
-
-1. Publish an issue in the Repo or
-1. Send an email to contact@mins.page
+## Manual Installation
+1. [Download](https://github.com/rareone0602/NTHU_ScoreSharing/archive/master.zip) and extract it.
+1. Go to `chrome://extensions` (Simply type it in the address bar).
+1. Turn on developer mode. Then press "Load unpacked" button.
+1. Select the `app` folder.
+1. You've finished installing the extension!

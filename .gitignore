@@ -1,0 +1,4 @@
+.DS_Store
+test/assets/*
+node_modules
+*.zip
