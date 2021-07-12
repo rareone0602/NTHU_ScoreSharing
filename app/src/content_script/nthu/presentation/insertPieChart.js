@@ -2,7 +2,7 @@ function insertPieChart(data, year_sem, course) {
   let pieOptions = {
       title: {
         display: true,
-        text: year_sem + ' ' + course.instructor + ' 平均：' + course.average
+        text: [year_sem + ' ' + course.instructor + ' 平均：' + course.average, "修了這堂課的人也修了\n" + data.recommendation.join()]
       },
       radiusBackground: {
         color: '#d1d1d1'
@@ -42,6 +42,7 @@ function insertPieChart(data, year_sem, course) {
         }
       }
     };
+  console.log(pieOptions);
 
   let canvas = document.createElement("canvas")
   canvas.className = "swiper-slide";

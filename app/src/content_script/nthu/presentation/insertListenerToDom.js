@@ -59,7 +59,8 @@ function insertListenerToDom(courseInfo, dom) {
               }[arr[0]]}),
               borderWidth: 0,
             }],
-            labels: distribution.map(arr => arr[0])
+            labels: distribution.map(arr => arr[0]),
+            recommendation: info.recommendation
           };
           swiperWrapper.appendChild(insertPieChart(data, year_sem, info));
         }
